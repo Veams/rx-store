@@ -17,7 +17,7 @@ function StoreFactory(combinedReducers, initialState) {
      */
     function select(selector) {
         if (typeof selector !== 'function') {
-            console.warn(`Veams Store :: Passed selector is not a function!`);
+            console.warn(`@veams/rx-store :: Passed selector is not a function!`);
 
             return;
         }
@@ -66,7 +66,7 @@ export function combineReducers(reducers) {
     return Object.entries(reducers).reduce((finalReducers, entry) => {
         const [key, value] = entry;
         if (typeof value === 'undefined') {
-            warning(`No reducer provided for key "${key}"`)
+            console.warn(`@veams/rx-store :: No reducer provided for key "${key}".`)
         }
 
         if (typeof value === 'function') {
