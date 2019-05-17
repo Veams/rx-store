@@ -46,25 +46,25 @@ A simple store gist can look like this:
 import { combineReducers, createStore } from '@veams/rx-store';
 
 function uiReducer(state, action) {
-	switch(action.type) {
-		case 'ui:currentMedia': {
-			return {...state, ui: {
+    switch(action.type) {
+        case 'ui:currentMedia': {
+            return {...state, ui: {
                 ...state.ui,
                 currentMedia: action.payload
             }}
-		}
-	}
+        }
+    }
 }
 
 function anotherReducer(state, action) {
-	switch(action.type) {
-		case 'test:update': {
-			return {...state, test: {
+    switch(action.type) {
+        case 'test:update': {
+            return {...state, test: {
                 ...state.test,
                 activeIdx: action.payload
             }}
-		}
-	}
+        }
+    }
 }
 
 const rootReducer = combineReducers({
