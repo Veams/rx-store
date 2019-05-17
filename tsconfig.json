@@ -1,0 +1,27 @@
+{
+	"compilerOptions": {
+		"outDir": "./lib",
+		"sourceMap": true,
+		"declaration": true,
+		"noImplicitAny": false,
+		"typeRoots": [
+			"node_modules/@types"
+		],
+		"module": "es6",
+		"moduleResolution": "node",
+		"target": "es6",
+		"allowUnreachableCode": true,
+		"lib": [
+			"esnext",
+			"dom"
+		],
+		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true
+	},
+	"include": [
+		"src/**/*.ts"
+	],
+	"exclude": [
+		"node_modules"
+	]
+}
