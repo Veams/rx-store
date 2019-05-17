@@ -11,9 +11,8 @@
     "types": "./lib/index.d.ts",
     "scripts": {
         "build": "tsc --project tsconfig.json --outDir lib --declarationDir lib --declaration --module es6 && webpack --mode=production",
-        "es-build": "babel lib --out-dir lib-esm",
         "start": "tsc --project tsconfig.json --watch --outDir lib --declarationDir lib --declaration --module es6",
-        "prepublish": "npm run build && npm run es-build"
+        "prepublish": "npm run build"
     },
     "dependencies": {
         "rxjs": "^6.4.0"
