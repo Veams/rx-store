@@ -49,9 +49,9 @@ function uiReducer(state, action) {
 	switch(action.type) {
 		case 'ui:currentMedia': {
 			return {...state, ui: {
-					...state.ui,
-					currentMedia: action.payload
-				}}
+                ...state.ui,
+                currentMedia: action.payload
+            }}
 		}
 	}
 }
@@ -60,9 +60,9 @@ function anotherReducer(state, action) {
 	switch(action.type) {
 		case 'test:update': {
 			return {...state, test: {
-					...state.test,
-					activeIdx: action.payload
-				}}
+                ...state.test,
+                activeIdx: action.payload
+            }}
 		}
 	}
 }
