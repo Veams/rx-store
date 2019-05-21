@@ -216,7 +216,7 @@ Select function can be used to get a specific slice from state.
 
 * @param {Function} selector - Selector function which gets passed the store.
 
-**`select(cb)`**
+**`dispatch(actionObject)`**
 
 Dispatch function to update store.
 
