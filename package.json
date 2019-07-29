@@ -1,18 +1,19 @@
 {
     "name": "@veams/rx-store",
     "description": "Simple redux-like store implementation in RxJS.",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "engines": {
         "node": ">=6.0.0"
     },
     "main": "lib-es/index.js",
-    "module": "lib/index.js",
+    "module": "lib-esm/index.js",
     "jsnext:main": "lib/index.js",
     "types": "./lib/index.d.ts",
     "scripts": {
         "build": "tsc --project tsconfig.json --outDir lib --declarationDir lib --declaration --module es6 && webpack --mode=production",
+        "es-build": "babel lib --out-dir lib-esm",
         "start": "tsc --project tsconfig.json --watch --outDir lib --declarationDir lib --declaration --module es6",
-        "prepublish": "npm run build"
+        "prepublish": "npm run build && npm run es-build"
     },
     "dependencies": {
         "rxjs": "^6.4.0"

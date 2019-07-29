@@ -1,5 +1,5 @@
-import { BehaviorSubject } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import {BehaviorSubject} from 'rxjs';
+import {distinctUntilChanged, map, tap} from 'rxjs/operators';
 import withDevTools from './with-devtools';
 
 export interface Action {
@@ -24,9 +24,9 @@ export default function StoreFactory(combinedReducers: ReducerObject, initialSta
 	/**
 	 * Factory Cache
 	 */
-	const subscriptions = new Map();
 	let state = initialState;
-	const connectedDevTools = options.devtools ? withDevTools(state, options.devtoolsOptions) : null;
+	const state$ = new BehaviorSubject(state);
+	const connectedDevTools = options.devtools ? withDevTools(initialState, options.devtoolsOptions) : null;
 
 	/**
 	 * Select function to get a specific slice from state.
@@ -40,19 +40,9 @@ export default function StoreFactory(combinedReducers: ReducerObject, initialSta
 			return;
 		}
 
-		const selectorId = selector.toString();
-
-		if (!subscriptions.has(selectorId)) {
-			const subject$ = new BehaviorSubject(selector(state));
-
-			subscriptions.set(selectorId, {
-				subject$,
-				selector
-			});
-		}
-
-		return subscriptions.get(selectorId).subject$.pipe(
-			distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+		return state$.pipe(
+			map(source => selector(source)),
+			distinctUntilChanged()
 		);
 	}
 
@@ -62,10 +52,13 @@ export default function StoreFactory(combinedReducers: ReducerObject, initialSta
 	 * @param {Object} action - Action object containing type and payload.
 	 */
 	function dispatch(action: Action) {
-		state = Object.values(combinedReducers).reduce((acc, reducer: (state, action: Action) => {}) => ({...acc, ...reducer(acc, action)}), state);
-		subscriptions.forEach(subscription => subscription.subject$.next(subscription.selector(state)));
+		state = Object.values(combinedReducers).reduce((newState, reducer: (state, action: Action) => {}) => {
+			return {...newState, ...reducer(newState, action)};
+		}, state);
 
-		if(connectedDevTools) {
+		state$.next(state);
+
+		if (connectedDevTools) {
 			connectedDevTools.send(action.type, state);
 		}
 	}
