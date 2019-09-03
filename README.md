@@ -2,7 +2,7 @@
 
 The Veams RxStore is a simple but powerful state management module based on RxJS with a similar Api like Redux or NgRx. 
 
-It is not framework agnostic and can be used in Angular, React, Vue or any other web application frameworks/libraries. 
+It is framework agnostic and can be used in Angular, React, Vue or any other web application frameworks/libraries. 
 
 TypeScript is supported. 
 
