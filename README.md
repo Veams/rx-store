@@ -79,7 +79,7 @@ const rootReducer = combineReducers({
 	another: anotherReducer
 });
 
-const rxStore = createStore(rootReducer, /* Place your middlewares here */)
+const reduxStore = createStore(rootReducer, /* Place your middlewares here */)
 
 /** 
  * Redux stuff ends
@@ -90,7 +90,7 @@ const rxStore = createStore(rootReducer, /* Place your middlewares here */)
  */
 const store = createObservableFromRedux({
     useSingleton: false,
-    store: rxStore
+    store: reduxStore
 });
 
 export default store;
@@ -105,7 +105,7 @@ import { store } from '@veams/rx-store';
 
 **Select & Subscription**
 
-Because Veams RxStore is giving you back the store, you are now able to select a slice out of it and subscribe to changes: 
+Because Veams RxStore is giving you back an observable store, you are now able to select a slice out of it and subscribe to changes: 
 
 ``` js 
 import { store } from '@veams/rx-store';
@@ -207,7 +207,7 @@ Redux instance you passed.
 
 **`observable`**
 
-Observable instance which was created by .
+Observable instance which was created by `createObservableFromRedux`.
 
 **`select(cb)`**
 
