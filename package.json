@@ -6,8 +6,8 @@
 		"node": ">=6.0.0"
 	},
 	"browser": "lib-umd/index.js",
-	"main": "lib-es/index.js",
-	"module": "lib-esm/index.js",
+	"main": "lib-esm/index.js",
+	"module": "lib-umd/index.js",
 	"jsnext:main": "lib/index.js",
 	"types": "./lib/index.d.ts",
 	"scripts": {
@@ -19,7 +19,7 @@
 		"prod:build": "cross-env NODE_ENV=production npm run build",
 		"docs:build": "typedoc --out docs src --includeDeclarations --exclude \"**/+(*test*|node_modules)/**\"  --readme README.md",
 		"lint:scripts": "tslint --fix \"src/**/*.{ts, test.ts}\" -t verbose",
-		"analyze:bundle": "source-map-explorer ./lib-umd/index.js",
+		"analyze:bundle": "source-map-explorer ./lib/index.js",
 		"prettify:scripts": "prettier --write \"src/**/*.{ts, test.ts}\"",
 		"test": "jest --runInBand --detectOpenHandles --no-cache --config ./jest.config.js",
 		"test:coverage": "cross-env BABEL_ENV=client jest --coverage",

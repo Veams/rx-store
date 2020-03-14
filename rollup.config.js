@@ -64,5 +64,11 @@ export default {
                 rxStore: name,
             },
         },
+        {
+            file: pkg['jsnext:main'],
+            format: 'esm',
+            name,
+            sourcemap: true
+        },
     ],
 };
