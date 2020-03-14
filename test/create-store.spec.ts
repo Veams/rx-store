@@ -33,7 +33,7 @@ describe('RxStore', () => {
   });
 
   describe('Selector', () => {
-    it('expects callback function', () => {
+    it('throws error when no callback function is provided', () => {
       const errorSelector = () => store.select(('test' as unknown as () => void));
 
       expect(errorSelector).toThrowError(/select()/);
@@ -78,7 +78,7 @@ describe('RxStore', () => {
   });
 
   describe('Store Option', () => {
-    it('when not provided returns error', () => {
+    it('when not provided throws error', () => {
       const storeError = () => createObservableFromRedux({ useSingleton: true, store: null });
 
       expect(storeError).toThrowError(/FormStore/);
@@ -93,7 +93,7 @@ describe('RxStore', () => {
       expect(store1).toStrictEqual(store2);
     });
 
-    it('when "false" returns a singleton object', () => {
+    it('when "false" returns different objects', () => {
       const store1 = createReduxMock(false);
       const store2 = createReduxMock(false);
 
