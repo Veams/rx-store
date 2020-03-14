@@ -1,4 +1,3 @@
-import combineReducers from './combine-reducers';
-import createStore, { store } from './create-store';
+import createObservableFromRedux, { store } from './create-store';
 
-export { store, createStore, combineReducers };
+export { store, createObservableFromRedux };

@@ -1,6 +1,8 @@
+[![Build Status](https://travis-ci.com/Veams/rx-store.svg?branch=master)](https://travis-ci.com/Veams/rx-store) ![Codecov](https://img.shields.io/codecov/c/github/veams/rx-store) [![GitHub license](https://img.shields.io/github/license/Veams/rx-store)](https://github.com/Veams/rx-store/blob/master/LICENSE)
+
 # Veams RxStore (`@veams/rx-store`)
 
-The Veams RxStore is a simple but powerful state management module based on RxJS with a similar Api like Redux or NgRx. 
+The Veams RxStore is a simple but powerful state management module based on RxJS and Redux.
 
 It is framework agnostic and can be used in Angular, React, Vue or any other web application frameworks/libraries. 
 
@@ -8,17 +10,11 @@ TypeScript is supported.
 
 ## Why this package?
 
-### Why not using Redux?
+### Why not using Redux standalone?
 
-Redux has some great benefits and advantages: small, simple and it has a huge community and eco system.
+Redux has some great benefits and advantages: small, simple and it has a huge community and eco system. That's why we are using it as core foundation.
 
-But: It follows the pattern of Observables, without having the power of RxJS Observables.
-
-### Why not using ngrx?
-
-That is easy to answer: It is bound to Angular. 
-
-When they would create this package without any fixed connection to Angular I would directly use it.
+But: It follows the pattern of Observables, without having the power of RxJS Observables. Try to use it out of the React ecosystem and you will discover some major issues like handling filtering of values and comparing previous and next incoming changes. 
 
 -------------------
  
@@ -43,8 +39,13 @@ yarn add @veams/rx-store
 A simple store gist can look like this: 
 
 ``` js
-import { combineReducers, createStore } from '@veams/rx-store';
+import { createObservableFromRedux } from '@veams/rx-store';
+import { combineReducers, createStore } from 'redux';
 
+/** 
+ * Redux stuff starts
+ */
+// Typical reducer
 function uiReducer(state, action) {
     switch(action.type) {
         case 'ui:currentMedia': {
@@ -53,9 +54,12 @@ function uiReducer(state, action) {
                 currentMedia: action.payload
             }}
         }
+        default: 
+            return state;
     }
 }
 
+// And another one
 function anotherReducer(state, action) {
     switch(action.type) {
         case 'test:update': {
@@ -64,24 +68,36 @@ function anotherReducer(state, action) {
                 activeIdx: action.payload
             }}
         }
+        default: 
+            return state;
     }
 }
 
+// Let's create 
 const rootReducer = combineReducers({
 	ui: uiReducer,
 	another: anotherReducer
 });
 
-createStore(rootReducer, {
-	ui: {},
-	test: {
-		activeIdx: 0
-	}
+const reduxStore = createStore(rootReducer, /* Place your middlewares here */)
+
+/** 
+ * Redux stuff ends
+ */
+
+/** 
+ * RxStore
+ */
+const store = createObservableFromRedux({
+    useSingleton: false,
+    store: reduxStore
 });
+
+export default store;
 
 ```
 
-By calling `createStore()` it is creating a singleton which you can use in your app by using the library like this: 
+By calling `createObservableFromRedux()` with `useSingleton: true` it is creating a singleton which you can use in your app by using the library like this: 
 
 ``` js
 import { store } from '@veams/rx-store';
@@ -89,7 +105,7 @@ import { store } from '@veams/rx-store';
 
 **Select & Subscription**
 
-Because Veams RxStore is giving you back the store, you are now able to select a slice out of it and subscribe to changes: 
+Because Veams RxStore is giving you back an observable store, you are now able to select a slice out of it and subscribe to changes: 
 
 ``` js 
 import { store } from '@veams/rx-store';
@@ -162,53 +178,36 @@ function renderApp(activeIdx) {
 btn.addEventListener('click', () => store.dispatch({type: 'test:update', payload: activeIdx + 1}))
 ```
 
-**Enable devtools extension**
-
-You can use the devtools extension by just passing the option to `createStore()`: 
-
-``` js 
-createStore(rootReducer, {
-	ui: {},
-	test: {
-		activeIdx: 0
-	},
-	options: {
-	    devtools: true
-	}
-});
-```
-
 ------------------------------
 
 ## API
 
-### `combineReducers()`
+### `createObservableFromRedux()`
 
-Combine all reducers to a final root reducer by validating them.
+Create store singleton by passing Redux.
 
-* @param {Object} reducers - Containing key/value pair. 
-
-### `createStore()`
-
-Create store singleton by using rootReducer and initial state.
-
-* @param {Object} rootReducer - rootReducer created by combineReducers().
-* @param {Object} initialState - initial state object.
 * @param {Object} options - Options object.
 
 The options object has some defaults, these are: 
 
 ``` 
 DEFAULT_OPTIONS = {
-	devtools: false,
-	devtoolsOptions: {},
-	useSingleton: true
+	useSingleton: true,
+    store: createStore((state) => state)
 };
 ```
 
 ### store 
 
 The store singleton has the following API: 
+
+**`redux`**
+
+Redux instance you passed.
+
+**`observable`**
+
+Observable instance which was created by `createObservableFromRedux`.
 
 **`select(cb)`**
 

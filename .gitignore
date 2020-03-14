@@ -1,6 +1,10 @@
 node_modules
 .idea
+coverage
 lib
 lib-es
 lib-esm
 lib-umd
+docs
+.DS_Store
+stats.html
