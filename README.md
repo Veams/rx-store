@@ -2,7 +2,7 @@
 
 # Veams RxStore (`@veams/rx-store`)
 
-The Veams RxStore is the missing wrapper for Redux to provide a simple but powerful state management module based with RxJS.
+Veams RxStore provides the missing RxJS wrapper for Redux to provide a simple but powerful state management module.
 
 It is framework agnostic and can be used in Angular, React, Vue or any other web application frameworks/libraries. 
 

@@ -1,9 +1,9 @@
 {
 	"name": "@veams/rx-store",
-	"description": "Simple redux wrapper in RxJS.",
-	"version": "1.0.0",
+	"description": "The missing RxJS wrapper for Redux to provide a simple but powerful state management module.",
+	"version": "1.0.1",
 	"engines": {
-		"node": ">=6.0.0"
+		"node": ">=8.0.0"
 	},
 	"browser": "lib-umd/index.js",
 	"main": "lib-esm/index.js",
@@ -23,7 +23,7 @@
 		"prettify:scripts": "prettier --write \"src/**/*.{ts, test.ts}\"",
 		"test": "jest --runInBand --detectOpenHandles --no-cache --config ./jest.config.js",
 		"test:coverage": "cross-env BABEL_ENV=client jest --coverage",
-		"prepublish": "npm run build"
+		"prepublish": "npm run prod:build"
 	},
 	"husky": {
 		"hooks": {
