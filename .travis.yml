@@ -3,6 +3,9 @@ node_js:
   - '10'
 install:
   - npm install -g codecov
+branches:
+  only:
+    - master
 script:
   - jest && coverage
   - codecov
