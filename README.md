@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/Veams/rx-store.svg?branch=master)](https://travis-ci.com/Veams/rx-store)
+
 # Veams RxStore (`@veams/rx-store`)
 
 The Veams RxStore is a simple but powerful state management module based on RxJS and Redux.

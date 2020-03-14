@@ -4,4 +4,6 @@ module.exports = {
   name: 'rx-store',
   moduleFileExtensions: ['js', 'ts'],
   transformIgnorePatterns: ['<rootDir>/node_modules/'],
+  coverageDirectory: './coverage/',
+  collectCoverage: true,
 };
