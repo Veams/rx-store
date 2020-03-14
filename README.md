@@ -2,7 +2,7 @@
 
 # Veams RxStore (`@veams/rx-store`)
 
-The Veams RxStore is a simple but powerful state management module based on RxJS and Redux.
+The Veams RxStore is the missing wrapper for Redux to provide a simple but powerful state management module based with RxJS.
 
 It is framework agnostic and can be used in Angular, React, Vue or any other web application frameworks/libraries. 
 
@@ -14,7 +14,9 @@ TypeScript is supported.
 
 Redux has some great benefits and advantages: small, simple and it has a huge community and eco system. That's why we are using it as core foundation.
 
-But: It follows the pattern of Observables, without having the power of RxJS Observables. Try to use it out of the React ecosystem and you will discover some major issues like handling filtering of values and comparing previous and next incoming changes. 
+**But:** It follows the pattern of Observables, without having the power of RxJS Observables. 
+
+Try to use it out of the React ecosystem and you will discover that you have to add a lot of work to handling filtering of values and comparing previous and next incoming changes. 
 
 -------------------
  
@@ -97,7 +99,7 @@ export default store;
 
 ```
 
-By calling `createObservableFromRedux()` with `useSingleton: true` it is creating a singleton which you can use in your app by using the library like this: 
+By calling `createObservableFromRedux()` with the option `useSingleton: true` we create a singleton which you can use in your app by using the library import like this: 
 
 ``` js
 import { store } from '@veams/rx-store';

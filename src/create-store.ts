@@ -19,11 +19,11 @@ const DEFAULT_OPTIONS: {
 };
 let store: RxStore;
 
-function createRxStore(reduxStore) {
+function createRxStore(reduxStore: Store) {
   return getState$(reduxStore);
 }
 
-function getState$(reduxStore) {
+function getState$(reduxStore: Store) {
   return new Observable(observer => {
     // emit the current state as first value:
     observer.next(reduxStore.getState());
