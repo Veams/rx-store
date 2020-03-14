@@ -1,33 +1,81 @@
-import StoreFactory from './store-factory';
+import isEqual from 'fast-deep-equal';
+import { AnyAction, createStore, Store } from 'redux';
+import { Observable } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
-const DEFAULT_OPTIONS = {
-	devtools: false,
-	devtoolsOptions: {},
-	useSingleton: true
+export interface RxStore {
+  redux: Store;
+  observable: Observable<unknown>;
+  select: (selector: (data: any) => any) => Observable<any>;
+  dispatch: (action: AnyAction) => void;
+}
+
+const DEFAULT_OPTIONS: {
+  store: Store | null;
+  useSingleton: boolean;
+} = {
+  store: null,
+  useSingleton: true,
 };
-let store;
+let store: RxStore;
+
+function createRxStore(reduxStore) {
+  return getState$(reduxStore);
+}
+
+function getState$(reduxStore) {
+  return new Observable(observer => {
+    // emit the current state as first value:
+    observer.next(reduxStore.getState());
+    return reduxStore.subscribe(() => {
+      // emit on every new state changes
+      observer.next(reduxStore.getState());
+    });
+  });
+}
+
+function createFormStore(reduxStore: Store): RxStore {
+  const store$ = createRxStore(reduxStore);
+
+  return {
+    dispatch(action) {
+      reduxStore.dispatch(action);
+    },
+    observable: store$,
+    redux: reduxStore,
+    select(selector) {
+      if (typeof selector !== 'function') {
+        throw new Error('RxStore :: select() : Please provide a selector function!');
+      }
+      return store$.pipe(
+        map(source => selector(source)),
+        distinctUntilChanged((a, b) => isEqual(a, b))
+      );
+    },
+  };
+}
 
 /**
  * Create store singleton by using rootReducer and initial state.
  *
- * @param {Object} rootReducer - rootReducer created by combineReducers().
- * @param {Object} initialState - initial state object.
  * @param {Object} options - Options object.
  *
  * @return {Object} store
  */
-export default function createStore(rootReducer, initialState = {}, options = DEFAULT_OPTIONS) {
-	const mergedOptions = {...DEFAULT_OPTIONS, ...options};
-	const newStore = StoreFactory(rootReducer, initialState,  {
-		devtools: mergedOptions.devtools,
-		devtoolsOptions: mergedOptions.devtoolsOptions
-	});
+export default function createObservableFromRedux(options = DEFAULT_OPTIONS): RxStore {
+  if (!options.store) {
+    throw new Error('RxStore :: FormStore : Redux is not provided as option!');
+  }
 
-	if(mergedOptions.useSingleton) {
-		store = newStore;
-	} else {
-		return newStore;
-	}
-};
+  const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
+  const newStore = createFormStore(mergedOptions.store || createStore(state => state));
+
+  if (mergedOptions.useSingleton) {
+    store = store || newStore;
+    return store;
+  } else {
+    return newStore;
+  }
+}
 
 export { store };
