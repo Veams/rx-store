@@ -7,5 +7,4 @@ branches:
   only:
     - master
 script:
-  - jest && coverage
   - codecov

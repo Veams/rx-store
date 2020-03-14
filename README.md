@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/Veams/rx-store.svg?branch=master)](https://travis-ci.com/Veams/rx-store)
+[![Build Status](https://travis-ci.com/Veams/rx-store.svg?branch=master)](https://travis-ci.com/Veams/rx-store) ![Codecov](https://img.shields.io/codecov/c/github/veams/rx-store) [![GitHub license](https://img.shields.io/github/license/Veams/rx-store)](https://github.com/Veams/rx-store/blob/master/LICENSE)
 
 # Veams RxStore (`@veams/rx-store`)
 
