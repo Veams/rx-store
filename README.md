@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/Veams/rx-store.svg?branch=master)](https://travis-ci.com/Veams/rx-store) ![Codecov](https://img.shields.io/codecov/c/github/veams/rx-store) [![GitHub license](https://img.shields.io/github/license/Veams/rx-store)](https://github.com/Veams/rx-store/blob/master/LICENSE)
+[![Build Status](https://travis-ci.com/Veams/rx-store.svg?branch=master)](https://travis-ci.com/Veams/rx-store) ![Codecov](https://img.shields.io/codecov/c/github/veams/rx-store) ![npm (scoped)](https://img.shields.io/npm/v/@veams/rx-store) [![GitHub license](https://img.shields.io/github/license/Veams/rx-store)](https://github.com/Veams/rx-store/blob/master/LICENSE)
 
 # Veams RxStore (`@veams/rx-store`)
 
@@ -12,11 +12,103 @@ TypeScript is supported.
 
 ### Why not using Redux standalone?
 
-Redux has some great benefits and advantages: small, simple and it has a huge community and eco system. That's why we are using it as core foundation.
+Redux has some great benefits and advantages: small, simple and it has a huge community and eco system. That's why we are using it!
 
 **But:** It follows the pattern of Observables, without having the power of RxJS Observables. 
 
-Try to use it out of the React ecosystem and you will discover that you have to add a lot of work to handling filtering of values and comparing previous and next incoming changes. 
+Try to use it out of the React ecosystem. You will discover that you have to add a lot manual work to handle filtering of values and changes. You need to add your own comparison logic. 
+
+### `@veams/rx-store` to rescue!
+
+`@veams/rx-store` starts there, where Redux ends. It provides a simple interface to get slices/chunks/parts out your store. 
+
+Next to that, you only subscribe to changes for this specific portion of the store, means `@veams/rx-store` is filtering the changes for you and only executes your provided subscription callback when the new state is different from the previous one. 
+
+Let's see the benefits in code form. Say we have a store which has the following structure: 
+
+``` js 
+{
+    ui: {
+        breakpoint: "small"
+    },
+    person: {
+        status: "fetched",
+        entities: {
+            1: {
+                name: "John",
+                gender: "male"
+            },
+            2: {
+                name: "Max",
+                gender: "male"
+            },
+            3: {
+                name: "Adriana",
+                gender: "female"
+            }
+        }
+    }
+}
+```
+
+When we only want to listen to changes to our UI slice, we can do the following: 
+
+``` js 
+const ui$ = store
+                .select(state => state.ui)
+                .subscribe((uiState) => {
+                    console.log(uiState); // Prints {breakpoint: "small"} and upcoming changes to the object
+                });
+
+// Later on we want to unsubscribe
+ui$.unsubscribe();
+```
+
+You can go even further down in your data chain: 
+
+``` js 
+const personX$ = store
+                    .select(state => state.person.entities.1)
+                    .subscribe((dataFromPersonWithId1) => {
+                        console.log(dataFromPersonWithId1); // Prints {name: "John", gender: "male"} and upcoming changes to the object
+                    });
+
+// Later on we want to unsubscribe
+personX$.unsubscribe();
+
+```
+
+Or what if you want to add more custom handling like returning only females: 
+
+``` js 
+import { map } from 'rxjs/operators';
+
+const getFemales = (data) => Object.values(data).filter(person => person.gender === "female")
+
+// By using operators
+const femalesByOperator$ = store
+                    .select(state => state.person.entities)
+                    .pipe(
+                        map(persons => getFemales(persons))
+                    )
+                    .subscribe((females) => {
+                        console.log(females); // Prints [{name: "Adriana", gender: "female"}] and upcoming changes to the person slice
+                    });
+
+// By using selector function
+const femalesBySelector$ = store
+                    .select(state => getFemales(state.person.entities))
+                    .subscribe((females) => {
+                        console.log(females); // Prints [{name: "Adriana", gender: "female"}] and upcoming changes to the person slice
+                    });
+
+// Later on we want to unsubscribe
+femalesByOperator$.unsubscribe();
+femalesBySelector$.unsubscribe();
+
+```
+
+It is as easy as this! You can also take a look at the [demo section](./demo/index.html)! 
 
 -------------------
  
@@ -107,7 +199,7 @@ import { store } from '@veams/rx-store';
 
 **Select & Subscription**
 
-Because Veams RxStore is giving you back an observable store, you are now able to select a slice out of it and subscribe to changes: 
+Because `@veams/rx-store` is giving you back a [`RxStore`](#interface) interface, you are now able to select a slice out of it and subscribe to changes: 
 
 ``` js 
 import { store } from '@veams/rx-store';
@@ -182,13 +274,27 @@ btn.addEventListener('click', () => store.dispatch({type: 'test:update', payload
 
 ------------------------------
 
-## API
+## Some technical stuff for you
 
-### `createObservableFromRedux()`
+### Interface 
+
+``` ts 
+export interface RxStore {
+  redux: Store; 
+  observable: Observable<unknown>;
+  select: (selector: (data: any) => any) => Observable<any>;
+  dispatch: (action: AnyAction) => void;
+}
+```
+
+### API
+
+#### `createObservableFromRedux()`
 
 Create store singleton by passing Redux.
 
 * @param {Object} options - Options object.
+* @return {RxStore} store
 
 The options object has some defaults, these are: 
 
@@ -199,26 +305,32 @@ DEFAULT_OPTIONS = {
 };
 ```
 
-### store 
+#### store 
 
-The store singleton has the following API: 
+The returned store has the following API: 
 
 **`redux`**
 
-Redux instance you passed.
+Redux instance you passed. 
+
+_It should not be necessary to work with the instance._
 
 **`observable`**
 
-Observable instance which was created by `createObservableFromRedux`.
+Observable instance which was created by `createObservableFromRedux`. 
+
+_It should not be necessary to work with the instance._
 
 **`select(cb)`**
 
-Select function can be used to get a specific slice from state.
+Select function can be used to get the whole state or a specific slice from state.
 
 * @param {Function} selector - Selector function which gets passed the store.
+* @return {Any} state slice
 
 **`dispatch(actionObject)`**
 
 Dispatch function to update store.
 
 * @param {Object} action - Action object containing `type` and `payload`.
+

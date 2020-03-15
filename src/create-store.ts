@@ -19,11 +19,7 @@ const DEFAULT_OPTIONS: {
 };
 let store: RxStore;
 
-function createRxStore(reduxStore: Store) {
-  return getState$(reduxStore);
-}
-
-function getState$(reduxStore: Store) {
+function getState$(reduxStore: Store): Observable<unknown> {
   return new Observable(observer => {
     // emit the current state as first value:
     observer.next(reduxStore.getState());
@@ -34,16 +30,20 @@ function getState$(reduxStore: Store) {
   });
 }
 
+function createRxStore(reduxStore: Store): Observable<unknown> {
+  return getState$(reduxStore);
+}
+
 function createFormStore(reduxStore: Store): RxStore {
   const store$ = createRxStore(reduxStore);
 
   return {
-    dispatch(action) {
+    dispatch(action): void {
       reduxStore.dispatch(action);
     },
     observable: store$,
     redux: reduxStore,
-    select(selector) {
+    select(selector): Observable<any> {
       if (typeof selector !== 'function') {
         throw new Error('RxStore :: select() : Please provide a selector function!');
       }

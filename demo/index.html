@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>@veams/rx-store demo</title>
+  </head>
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/6.5.4/rxjs.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.5/redux.min.js"></script>
+    <script src="../lib-umd/index.js"></script>
+    <script>
+      const reduxStore = Redux.createStore(
+        Redux.combineReducers({
+          ui: (state = {}, action) => {
+            switch (action.type) {
+              default:
+                return state;
+            }
+          },
+          person: (state = {}, action) => {
+            switch (action.type) {
+              case 'person:add':
+                return {
+                  ...state,
+                  entities: {
+                    ...state.entities,
+                    ...action.payload,
+                  },
+                };
+              default:
+                return state;
+            }
+          },
+        }),
+        {
+          ui: {},
+          person: {
+            status: 'fetched',
+            entities: {},
+          },
+        }
+      );
+      const store = RxStore.createObservableFromRedux({
+        store: reduxStore,
+      });
+
+      const females$ = store
+        .select(state => state.person.entities)
+        .pipe(
+          rxjs.operators.map(items => {
+            return Object.values(items).filter(person => person.gender === 'female');
+          })
+        )
+        .subscribe(females => {
+          console.log(females); // Prints [{name: "Adriana", gender: "female"}] and upcoming changes to the person slice
+        });
+
+      setTimeout(() => {
+        store.dispatch({
+          type: 'person:add',
+          payload: {
+            1: {
+              name: 'John',
+              gender: 'male',
+            },
+            2: {
+              name: 'Max',
+              gender: 'male',
+            },
+            3: {
+              name: 'Adriana',
+              gender: 'female',
+            },
+          },
+        });
+      }, 500);
+
+      // Later on we want to unsubscribe
+      setTimeout(() => {
+        females$.unsubscribe();
+      }, 5000);
+    </script>
+  </body>
+</html>
