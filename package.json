@@ -1,9 +1,17 @@
 {
   "name": "@veams/rx-store",
   "description": "The missing RxJS wrapper for Redux to provide a simple but powerful state management module.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "engines": {
     "node": ">=8.0.0"
+  },
+  "author": {
+    "email": "sebastian@veams.org",
+    "name": "Sebastian Fitzner"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/veams/rx-store.git"
   },
   "browser": "lib-umd/index.js",
   "main": "lib-esm/index.js",
@@ -16,7 +24,8 @@
     "start": "cross-env NODE_ENV=development rollup -c --watch",
     "build": "rollup -c",
     "dev:build": "cross-env NODE_ENV=development npm run build",
-    "prod:build": "cross-env NODE_ENV=production npm run build",
+    "prod:build": "cross-env NODE_ENV=production npm run build && npm run gzip",
+    "gzip": "gzip ./lib/**/*.js && gzip ./lib-umd/**/*.js",
     "docs:build": "typedoc --out docs src --includeDeclarations --exclude \"**/+(*test*|node_modules)/**\"  --readme README.md",
     "lint:scripts": "eslint --fix \"src/**/*.ts\"",
     "analyze:bundle": "source-map-explorer ./lib/index.js",
@@ -70,6 +79,7 @@
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",
+    "gzip-cli": "^1.1.0",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
     "lint-staged": "^10.0.8",
@@ -94,7 +104,16 @@
       "type": "MIT"
     }
   ],
-  "keywords": [],
+  "keywords": [
+    "veams",
+    "redux",
+    "rxjs",
+    "store",
+    "connect",
+    "subscribe",
+    "observable",
+    "state management"
+  ],
   "peerDependencies": {
     "redux": "^4.0.5"
   }
