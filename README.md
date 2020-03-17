@@ -8,8 +8,8 @@
 
 **It is written in TypeScript.** 
 
-**It is bundled and gzipped around 5KB.** 
-Take a look at our uncompressed [stats file](https://github.com/Veams/rx-store/blob/master/bundle.png) to find out more about our bundle. 
+**It is bundled and gzipped _(with Redux fallback and RxJS)_ around 5KB.** 
+Take a look at our uncompressed [stats file](https://github.com/Veams/rx-store/raw/master/bundle.png) to find out more about our bundle.
 
 ## Why this package?
 
@@ -111,7 +111,10 @@ femalesBySelector$.unsubscribe();
 
 ```
 
-It is as easy as this! You can also take a look at the [demo implementation](https://github.com/Veams/rx-store/blob/master/demo/index.html)! 
+_It is as easy as this!_ 
+
+You can also take a look at the [demo implementation](https://github.com/Veams/rx-store/blob/master/demo/index.html)! 
+In the provided example we have simple counter and store in place. Via `setTimeout()` we add data to the store - nothing more and really basic. 
 
 -------------------
  
