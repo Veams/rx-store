@@ -62,11 +62,11 @@ export default [
                 },
             },
             {
-                file: pkg['jsnext:main'],
-                format: 'esm',
+                file: pkg['main'],
+                format: 'es',
                 name,
                 sourcemap: true
-            },
+            }
         ],
     }
 ];

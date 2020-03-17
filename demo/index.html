@@ -5,10 +5,15 @@
     <title>@veams/rx-store demo</title>
   </head>
   <body>
+
+  <div id="app">No data yet!
+  </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/6.5.4/rxjs.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.5/redux.min.js"></script>
     <script src="../lib-umd/index.js"></script>
     <script>
+      let count = 0;
+      const el = document.getElementById('app');
       const reduxStore = Redux.createStore(
         Redux.combineReducers({
           ui: (state = {}, action) => {
@@ -52,9 +57,17 @@
           })
         )
         .subscribe(females => {
-          console.log(females); // Prints [{name: "Adriana", gender: "female"}] and upcoming changes to the person slice
+          count += 1;
+          console.log('count: ', count);
+          el.innerHTML = `<pre>${JSON.stringify(females, null, 4)}</pre>`; // Prints [{name: "Adriana", gender: "female"}] and upcoming changes to the person slice
         });
 
+      // Later on we want to unsubscribe
+      setTimeout(() => {
+        females$.unsubscribe();
+      }, 5000);
+
+      // DISPATCH ACTIONS
       setTimeout(() => {
         store.dispatch({
           type: 'person:add',
@@ -73,12 +86,67 @@
             },
           },
         });
-      }, 500);
+      }, 1000);
 
-      // Later on we want to unsubscribe
       setTimeout(() => {
-        females$.unsubscribe();
-      }, 5000);
+        store.dispatch({
+          type: 'person:add',
+          payload: {
+            4: {
+              name: 'Andrea',
+              gender: 'female',
+            },
+          },
+        });
+      }, 2000);
+
+      setTimeout(() => {
+        store.dispatch({
+          type: 'person:add',
+          payload: {
+            4: {
+              name: 'Andreas',
+              gender: 'male',
+            },
+          },
+        });
+      }, 3000);
+
+      setTimeout(() => {
+        store.dispatch({
+          type: 'person:add',
+          payload: {
+            5: {
+              name: 'Maxime',
+              gender: 'female',
+            },
+          },
+        });
+      }, 4000);
+
+      setTimeout(() => {
+        store.dispatch({
+          type: 'person:add',
+          payload: {
+            5: {
+              name: 'Maxime',
+              gender: 'female',
+            },
+          },
+        });
+      }, 4500);
+
+      setTimeout(() => {
+        store.dispatch({
+          type: 'person:add',
+          payload: {
+            6: {
+              name: 'Sylvia',
+              gender: 'female',
+            },
+          },
+        });
+      }, 6000);
     </script>
   </body>
 </html>

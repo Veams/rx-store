@@ -1,7 +1,7 @@
 {
   "name": "@veams/rx-store",
   "description": "The missing RxJS wrapper for Redux to provide a simple but powerful state management module.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "engines": {
     "node": ">=8.0.0"
   },
@@ -14,17 +14,19 @@
     "url": "https://github.com/veams/rx-store.git"
   },
   "browser": "lib-umd/index.js",
-  "main": "lib-esm/index.js",
-  "module": "lib-umd/index.js",
-  "jsnext:main": "lib/index.js",
+  "main": "lib/index.js",
+  "module": "lib-esm/index.js",
+  "jsnext:main": "lib-esm/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "clear:app": "rimraf app/**",
-    "pre-start": "npm run clear:app",
+    "clear:app": "rimraf lib/** && rimraf lib-esm && rimraf lib-umd",
+    "prestart": "npm run clear:app",
     "start": "cross-env NODE_ENV=development rollup -c --watch",
+    "prebuild": "npm run clear:app",
     "build": "rollup -c",
+    "ts2es": "tsc --project tsconfig.json --outDir lib-esm",
     "dev:build": "cross-env NODE_ENV=development npm run build",
-    "prod:build": "cross-env NODE_ENV=production npm run build && npm run gzip",
+    "prod:build": "cross-env NODE_ENV=production npm run build && npm run ts2es && npm run gzip",
     "gzip": "gzip ./lib/**/*.js && gzip ./lib-umd/**/*.js",
     "docs:build": "typedoc --out docs src --includeDeclarations --exclude \"**/+(*test*|node_modules)/**\"  --readme README.md",
     "lint:scripts": "eslint --fix \"src/**/*.ts\"",
@@ -47,6 +49,7 @@
     ]
   },
   "dependencies": {
+    "capture-website-cli": "^0.6.0",
     "fast-deep-equal": "^3.1.1",
     "redux": "^4.0.5",
     "rxjs": "^6.5.4"
