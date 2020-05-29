@@ -20,7 +20,7 @@
   "types": "./lib-esm/",
   "scripts": {
     "preversion": "npm test",
-    "version": "npm run prod:build && git add .",
+    "version": "npm run prod:build && npm run tsc:types && git add .",
     "postversion": "git push && git push --tags && npm publish --access public",
     "clear:app": "rimraf lib/** && rimraf lib-esm && rimraf lib-umd",
     "prestart": "npm run clear:app",
@@ -37,7 +37,6 @@
     "prettify:scripts": "prettier --write \"src/**/*.{ts, test.ts}\"",
     "test": "jest --runInBand --detectOpenHandles --no-cache --config ./jest.config.js",
     "test:coverage": "cross-env BABEL_ENV=client jest --coverage",
-    "prepublish": "npm run prod:build",
     "tsc:types": "tsc --project tsconfig.json --emitDeclarationOnly true --declaration true --declarationDir ./lib-esm/"
   },
   "husky": {
