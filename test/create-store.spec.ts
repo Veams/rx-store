@@ -77,14 +77,6 @@ describe('RxStore', () => {
     });
   });
 
-  describe('Store Option', () => {
-    it('when not provided throws error', () => {
-      const storeError = () => createObservableFromRedux({ useSingleton: true, store: null });
-
-      expect(storeError).toThrowError(/FormStore/);
-    });
-  });
-
   describe('Singleton Option', () => {
     it('when "true" returns a singleton object', () => {
       const store1 = createReduxMock(true);

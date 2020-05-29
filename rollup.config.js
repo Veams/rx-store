@@ -36,9 +36,7 @@ const plugins = [
 
 if (process.env.NODE_ENV === 'production') {
     plugins.push(
-        terser({
-            sourcemap: true,
-        })
+        terser()
     );
 }
 

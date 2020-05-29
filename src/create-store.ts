@@ -1,5 +1,5 @@
 import isEqual from 'fast-deep-equal';
-import { AnyAction, createStore, Store } from 'redux';
+import { AnyAction, Store } from 'redux';
 import { Observable } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
@@ -10,17 +10,18 @@ export interface RxStore {
   dispatch: (action: AnyAction) => void;
 }
 
-const DEFAULT_OPTIONS: {
-  store: Store | null;
+export type RxStoreOptions = {
+  store: Store;
   useSingleton: boolean;
-} = {
-  store: null,
+};
+
+const DEFAULT_OPTIONS: Partial<RxStoreOptions> = {
   useSingleton: true,
 };
 let store: RxStore;
 
 function getState$(reduxStore: Store): Observable<unknown> {
-  return new Observable(observer => {
+  return new Observable((observer) => {
     // emit the current state as first value:
     observer.next(reduxStore.getState());
     return reduxStore.subscribe(() => {
@@ -48,7 +49,7 @@ function createFormStore(reduxStore: Store): RxStore {
         throw new Error('RxStore :: select() : Please provide a selector function!');
       }
       return store$.pipe(
-        map(source => selector(source)),
+        map((source) => selector(source)),
         distinctUntilChanged((a, b) => isEqual(a, b))
       );
     },
@@ -62,13 +63,13 @@ function createFormStore(reduxStore: Store): RxStore {
  *
  * @return {Object} store
  */
-export default function createObservableFromRedux(options = DEFAULT_OPTIONS): RxStore {
+export default function createObservableFromRedux(options: RxStoreOptions): RxStore {
   if (!options.store) {
     throw new Error('RxStore :: FormStore : Redux is not provided as option!');
   }
 
-  const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
-  const newStore = createFormStore(mergedOptions.store || createStore(state => state));
+  const mergedOptions: RxStoreOptions = { ...DEFAULT_OPTIONS, ...options };
+  const newStore = createFormStore(mergedOptions.store);
 
   if (mergedOptions.useSingleton) {
     store = store || newStore;

@@ -8,3 +8,4 @@ lib-umd
 docs
 .DS_Store
 stats.html
+yarn.lock
