@@ -8,7 +8,7 @@
 
 **It is written in TypeScript.** 
 
-**It is bundled and gzipped _(with Redux fallback and RxJS)_ around 5KB.** 
+**It is bundled and gzipped around 4KB.** 
 Take a look at our uncompressed [stats file](https://github.com/Veams/rx-store/raw/master/bundle.png) to find out more about our bundle.
 
 ## Why this package?
