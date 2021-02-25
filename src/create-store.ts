@@ -65,7 +65,7 @@ function createFormStore(reduxStore: Store): RxStore {
  */
 export default function createObservableFromRedux(options: RxStoreOptions): RxStore {
   if (!options.store) {
-    throw new Error('RxStore :: FormStore : Redux is not provided as option!');
+    throw new Error('RxStore :: Redux is not provided as option!');
   }
 
   const mergedOptions: RxStoreOptions = { ...DEFAULT_OPTIONS, ...options };
